@@ -1,0 +1,14 @@
+<table class="bruh">
+  <tr>
+    {{ range .Headings }}
+    <th>{{ . }}</th>
+    {{ end }}
+  </tr>
+  {{ range .Rows }}
+  <tr>
+    {{ range . }}
+    <td>{{ . }}</td>
+    {{ end }}
+  </tr>
+  {{ end }}
+</table>

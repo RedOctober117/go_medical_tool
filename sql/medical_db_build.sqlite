@@ -1,0 +1,176 @@
+CREATE TABLE report_providers (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    provider TEXT NOT NULL
+);
+CREATE TABLE report_types (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT NOT NULL
+);
+CREATE TABLE report (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    date DATETIME NOT NULL
+);
+CREATE TABLE report_provider (
+    report_id INTEGER NOT NULL,
+    provider_id INTEGER NOT NULL,
+    CONSTRAINT composite_key PRIMARY KEY (report_id, provider_id),
+    FOREIGN KEY (report_id) REFERENCES report (ID),
+    FOREIGN KEY (provider_id) REFERENCES report_providers (ID)
+);
+CREATE TABLE report_type (
+    report_id INTEGER NOT NULL,
+    report_type_id INTEGER NOT NULL,
+    FOREIGN KEY (report_id) REFERENCES report (ID),
+    FOREIGN KEY (report_type_id) REFERENCES report_types (ID)
+);
+CREATE TABLE item_units (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    description TEXT,
+    shorthand TEXT NOT NULL
+);
+CREATE TABLE item_classes (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    abbreviation TEXT NOT NULL
+);
+CREATE TABLE line_item (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    report_id INTEGER NOT NULL,
+    FOREIGN KEY (report_id) REFERENCES report (ID)
+);
+CREATE TABLE line_item_class (
+    line_item_id INTEGER NOT NULL,
+    item_class_id INTEGER NOT NULL,
+    FOREIGN KEY (line_item_id) REFERENCES line_item (ID),
+    FOREIGN KEY (item_class_id) REFERENCES item_classes (ID)
+);
+CREATE TABLE line_item_unit (
+    line_item_id INTEGER NOT NULL,
+    item_unit_id INTEGER NOT NULL,
+    FOREIGN KEY (line_item_id) REFERENCES line_item (ID),
+    FOREIGN KEY (item_unit_id) REFERENCES item_units (ID)
+);
+CREATE TABLE line_item_measurement (
+    line_item_id INTEGER NOT NULL,
+    item_measurement REAL NOT NULL,
+    FOREIGN KEY (line_item_id) REFERENCES line_item (ID)
+);
+-- TEST DATA
+INSERT INTO report_types (type)
+VALUES ('Renal Function Panel'),
+    ('Cystatin C'),
+    ('Uric Acid'),
+    ('Complete Blood Cell Count with Automated Diff'),
+    ('Complete Metabolic Panel');
+INSERT INTO item_units (
+        full_name,
+        description,
+        shorthand
+    )
+VALUES ('Milligrams per Deciliter', '', 'mg/dL'),
+    ('Grams per Deciliter', '', 'g/dL'),
+    ('Milimoles per Liter', '', 'mmol/L'),
+    (
+        'Mililiters per Minim per Body Surface Area',
+        '',
+        'mL/min/1.73m sq'
+    ),
+    -- https://en.wikipedia.org/wiki/Glomerular_filtration_rate#Measurement
+    (
+        'Thousand Cells per Cubic Milimeter',
+        '',
+        'K/cubic mm'
+    ),
+    (
+        'Million Cells per Cubic Milimeter',
+        '',
+        'M/cubic mm'
+    ),
+    -- https://www.cdc.gov/cliac/docs/addenda/cliac0313/13A_CLIAC_2013March_UnitsOfMeasure.pdf
+    ('Percentage', '', '%'),
+    ('Picograms', '', 'pg');
+INSERT INTO item_classes (name, abbreviation)
+VALUES ('Albumin', 'ALB'),
+    ('Carbon Dioxide', 'CO2'),
+    ('Blood Urea Nitrogen', 'BUN'),
+    ('Calcium', 'CA'),
+    ('Creatinine', 'CREA'),
+    ('Glucose', 'GLUC'),
+    ('Phosphorus', 'PHOS'),
+    ('Sodium', 'NA'),
+    ('Potassium', 'K'),
+    ('Chloride', 'CL'),
+    ('Estimated Glomerular Filtration Rate', 'eGFR'),
+    (
+        'Blood Urea Nitrogen-Creatinine Ratio',
+        'B/C RATIO'
+    ),
+    ('Cystatin C', 'CYSC'),
+    (
+        'Glomerular Filtration Rate Epidemiology Collaboration',
+        'GFREPI'
+    ),
+    ('Uric Acid', 'URCA'),
+    ('White Blood Cell Count', 'WBC'),
+    ('Red Blood Cell Count', 'RBC'),
+    ('Hemoglobin', 'HGB'),
+    ('Hematocrit', 'HCT'),
+    ('Mean Corpuscular Volume', 'MCV'),
+    ('Mean Corpuscular Hemoglobin', 'MCH'),
+    (
+        'Mean Corpuscular Hemoglobin Concentration',
+        'MCHC'
+    ),
+    ('Platelets', 'PLT'),
+    ('Red Cell Distribution Width', 'RDW'),
+    ('Mean Platelet Volume', 'MPV'),
+    ('Neutrophils', 'NEU #'),
+    ('Neutrophils', 'NEU %'),
+    ('Lymphocytes', 'LY #'),
+    ('Lymphocytes', 'LY %'),
+    ('Monocytes', 'MO #'),
+    ('Monocytes', 'MO %'),
+    ('Eosinophil', 'EOS #'),
+    ('Eosinophils', 'EOS %'),
+    ('Basophils', 'BASO #'),
+    ('Basophils', 'BASO %'),
+    ('Immunoglobulins', 'IG #'),
+    ('Immunoglobulins', 'IG %');
+-- DROP DATABASE IF EXISTS db;
+-- CREATE DATABASE IF NOT EXISTS db;
+-- USE db;
+-- a contact is an institution, a contact is a person
+-- address for institution, email/phone for contact
+-- instutition for contact
+-- start contact
+-- CREATE TABLE contact (
+--     ID INTEGER PRIMARY KEY AUTOINCREMENT,
+--     type TEXT UNIQUE
+-- );
+-- CREATE TABLE contact_physical_address (
+--     contact_id INTEGER NOT NULL UNIQUE,
+--     contact_street_address TEXT NOT NULL,
+--     FOREIGN KEY (contact_id) REFERENCES contact (ID)
+-- );
+-- CREATE TABLE contact_phone_number (
+--     contact_id INTEGER NOT NULL UNIQUE,
+--     contact_phone_number TEXT NOT NULL,
+--     FOREIGN KEY (contact_id) REFERENCES contact (ID)
+-- );
+-- CREATE TABLE contact_email (
+--     contact_id INTEGER NOT NULL,
+--     email_address TEXT NOT NULL,
+--     FOREIGN KEY (contact_id) REFERENCES contact (ID)
+-- );
+-- CREATE TABLE contact_phone (
+--     contact_id INTEGER NOT NULL,
+--     contact_contact_phone_number VARCHAR(200) NOT NULL,
+--     CONSTRAINT composite_key PRIMARY KEY (contact_id, contact_contact_phone_number),
+--     FOREIGN KEY (contact_id) REFERENCES report_contact (ID)
+-- );
+-- CREATE TABLE contact_kind (
+--     ID INTEGER PRIMARY KEY AUTOINCREMENT,
+--     kind TEXT NOT NULL
+-- );
+-- FIX THIS
