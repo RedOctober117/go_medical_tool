@@ -1,0 +1,6 @@
+<form hx-post="/insert-{{ .FormName }}">
+  {{ range .Fields }}
+  <input type="text" id="{{.}}" />
+  {{ end }}
+  <button type="submit">Submit</button>
+</form>

@@ -72,6 +72,7 @@ func main() {
 
 	// fmt.Println(Must(GetReportHistoryPretty(db)))
 
+	log.Println("Starting server at http://localhost:8080/")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
